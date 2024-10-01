@@ -1,15 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Student List</title>
-</head>
-<body>
-	<h1>Student List</h1>
-	<ul>
-		{% for student in students %}
-			<li><a href="{% url 'student_detail' student.pk %}">{{ student.first_name }} {{ student.last_name }}</a></li>
-		{% endfor %}
-	</ul>
-	
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block title %}Student List{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-title">Student List</div>
+    <ul class="list-group">
+        {% for student in students %}
+            <li class="list-group-item">
+                <a href="{% url 'student_detail' student.pk %}">{{ student.first_name }} {{ student.last_name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'student_add' %}" class="btn btn-primary w-100 mt-3">Add New Student</a>
+</div>
+{% endblock %}
