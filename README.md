@@ -33,22 +33,39 @@
       pip install -r requirements.txt
       ```
 
-   4. **Apply migrations:**
+   4. **Set Up Environment Variables**:
+
+   -   Copy the example environment file:
+      
+        ```sh
+        cp .env.example .env
+        ```
+
+   -   Edit the `.env` file to include your secret key and other settings:
+
+         ```sh
+        SECRET_KEY=your_secret_key
+
+        DEBUG=True
+
+        ALLOWED_HOSTS=127.0.0.1,localhost
+        ```
+
+   5. **Apply migrations:**
 
       ```sh
-      python manage.py makemigrations
       python manage.py migrate
       ```
 
    ## Running the Project
 
-   5. **Start the development server:**
+   6. **Start the development server:**
 
       ```sh
       python manage.py runserver
       ```
 
-   6. Open your web browser and go to \`http://127.0.0.1:8000/\`.
+   7. Open your web browser and go to \`http://127.0.0.1:8000/\`.
 
 
    ## License
