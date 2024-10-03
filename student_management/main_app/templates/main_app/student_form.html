@@ -7,32 +7,36 @@
     <div class="form-title">{% if form.instance.pk %}Edit{% else %}Add{% endif %} Student</div>
     <form method="post" class="needs-validation" novalidate>
         {% csrf_token %}
-        <div class="mb-3 mt-3">
-            {{ form.first_name.label_tag }}
-            {{ form.first_name }}
+        
+        {{ form.as_p }}
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field in form %}
+                    {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
         </div>
-        <div class="mb-3">
-            {{ form.last_name.label_tag }}
-            {{ form.last_name }}
-        </div>
-        <div class="mb-3">
-            {{ form.email.label_tag }}
-            {{ form.email }}
-        </div>
-        <div class="mb-3">
-            {{ form.date_of_birth.label_tag }}
-            {{ form.date_of_birth }}
-        </div>
-        <div class="mb-3">
-            {{ form.enrollment_date.label_tag }}
-            {{ form.enrollment_date }}
-        </div>
-        <div class="mb-3">
-            {{ form.grade.label_tag }}
-            {{ form.grade }}
-        </div>
+        {% endif %}
         <button type="submit" class="btn btn-primary w-100">Save</button>
         <a href="{% url 'student_list' %}" class="btn btn-secondary w-100 mt-2">Back to List</a>
     </form>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function(){
+        $('#id_date_of_birth, #id_enrollment_date').datepicker({
+            format: 'yyyy-mm-dd',
+            autoclose: true,
+            todayHighlight: true
+        });
+    });
+</script>
 {% endblock %}

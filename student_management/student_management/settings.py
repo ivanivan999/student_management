@@ -11,21 +11,30 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
+
+# Initialize environment variables
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
+
+# Reading .env file
+environ.Env.read_env(env_file=str(Path(__file__).resolve().parent.parent / '.env'))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure--38)%xrf%0ugbk5n6qwa-#8xr4^4s3ej4uwn-q_+ls3hl_vm_z'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=[])
 
 
 # Application definition
@@ -71,6 +80,9 @@ TEMPLATES = [
         },
     },
 ]
+
+# Ensure the custom 404 template is used
+handler404 = 'django.views.defaults.page_not_found'
 
 WSGI_APPLICATION = 'student_management.wsgi.application'
 

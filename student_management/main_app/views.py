@@ -2,8 +2,12 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.urls import reverse_lazy
+from django.shortcuts import render, get_object_or_404
 from .models import Student
 from .forms import StudentForm
+
+def custom_404(request, exception):
+    return render(request, '404.html', status=404)
 
 class StudentListView(LoginRequiredMixin, ListView):
     model = Student
@@ -29,7 +33,6 @@ class StudentListView(LoginRequiredMixin, ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        paginator = context['paginator']
         page_obj = context['page_obj']
         context['start_index'] = page_obj.start_index()
         context['end_index'] = page_obj.end_index()
@@ -39,6 +42,10 @@ class StudentDetailView(LoginRequiredMixin, DetailView):
     model = Student
     template_name = 'student_detail.html'
     context_object_name = 'student'
+    
+    def get_object(self):
+        return get_object_or_404(Student, pk=self.kwargs['pk'])
+
 
 class StudentCreateView(LoginRequiredMixin, CreateView):
     model = Student
@@ -46,8 +53,18 @@ class StudentCreateView(LoginRequiredMixin, CreateView):
     template_name = 'student_form.html'
     success_url = reverse_lazy('student_list')
 
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+
 class StudentUpdateView(LoginRequiredMixin, UpdateView):
     model = Student
     form_class = StudentForm
     template_name = 'student_form.html'
     success_url = reverse_lazy('student_list')
+
+    def get_object(self):
+        return get_object_or_404(Student, pk=self.kwargs['pk'])
+
+    def form_invalid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
